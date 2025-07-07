@@ -1,1 +1,15 @@
 
+version: '3.8'
+services:
+  movies:
+    image: movie:v1
+    ports:
+      - "81:80"
+    deploy:
+      replicas: 2
+
+  train:
+    image: train:v1
+    ports:
+      - "82:80"
+    replicas: 2
