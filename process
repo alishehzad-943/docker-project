@@ -1,18 +1,31 @@
- 1  yum install docker -y
-    2  systemctl start docker
-    3  systemctl enable docker
-    4  sudo systemctl enable docker
-    5  systemctl status docker
-    6  clear
-    7  docker -v
-    8  docker swarm init
-    9  docker swarm leave
-   10  docker swarm leave --force
-   11  docker swarm init
-   12  docker node ls
-   13  clear
-   14  vim jenkins.sh
-   15  sh jenkins.sh
+#DOCKER PROJECT:
+DOCKER FILE	: To create image by automation.
+DOCKER COMPOSE	: To create multiple containers on single server.
+DOCKER SWARM	: To create multiple containers on Multiple server.
+DOCKE STACK	: Docker swarm + Docker compose
+
+
+1. CREATE 3 SERVERS AND INSTALL DOCKER ON ALL OF THEM & CREATE CLUSTER OF IT
+yum install docker -y
+systemctl start docker
+systemctl enable docker
+sudo systemctl enable docker
+systemctl status docker
+docker swarm init           #run on master and copy token paste on workers
+    
+
+2. INSTALLING JENKINS (MASTER)
+
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+amazon-linux-extras install java-openjdk11 -y 
+yum install git maven jenkins -y
+systemctl start jenkins.service
+systemctl status jenkins.service
+
+public ip Master:8080  
+
+3.Make a new job and write pipeline
 
 pipeline {
     agent any 
@@ -46,6 +59,43 @@ pipeline {
         }
     }
 }
+
+4. GIVE PERMISSIONS ON MASTER FOR BUILD IMAGES
+
+chmod 777 /var/run/docker.sock
+systemctl daemon-reload
+systemctl restart docker.service
+
+5.WRITE COMPOSE FILE AND DEPLOY THROUGH PIPELINE
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Code') {
+            steps {
+                git 'https://github.com/alishehzad-943/docker-project.git'
+            }
+        }
+
+        stage('Deploy with Docker Stack') {
+            steps {
+                sh 'docker stack deploy -c docker-compose.yml paytm'
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
