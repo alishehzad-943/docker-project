@@ -1,0 +1,15 @@
+ 1  yum install docker -y
+    2  systemctl start docker
+    3  systemctl enable docker
+    4  sudo systemctl enable docker
+    5  systemctl status docker
+    6  clear
+    7  docker -v
+    8  docker swarm init
+    9  docker swarm leave
+   10  docker swarm leave --force
+   11  docker swarm init
+   12  docker node ls
+   13  clear
+   14  vim jenkins.sh
+   15  sh jenkins.sh
