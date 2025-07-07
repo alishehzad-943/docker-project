@@ -13,3 +13,40 @@
    13  clear
    14  vim jenkins.sh
    15  sh jenkins.sh
+
+pipeline {
+    agent any 
+
+    stages {
+        stage('Code') {
+            steps {
+                git 'https://github.com/alishehzad-943/docker-project.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'docker build -t $img .'
+            }
+        }
+
+        stage('Tag') {
+            steps {
+                sh 'docker tag $img $repo'
+            }
+        }
+
+        stage('Push') {
+            steps {
+                sh '''
+                    echo $PASSWORD | docker login -u $USERNAME --password-stdin
+                    docker push $repo
+                '''
+            }
+        }
+    }
+}
+
+
+
+
