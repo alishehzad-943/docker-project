@@ -1,12 +1,18 @@
-version: '3.8'
+
+version: "3"
 services:
-  movies:
-    image: movie:v1
+  dth:
+    image: alishehzad943/dth:latest
     ports:
       - "81:80"
+    deploy:
+      replicas: 1
+    restart: always
 
   train:
-    image: train:v1
+    image: alishehzad943/train1:latest
     ports:
       - "82:80"
-
+    deploy:
+      replicas: 1
+    restart: always
