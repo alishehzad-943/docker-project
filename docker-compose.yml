@@ -1,18 +1,16 @@
-
 version: "3"
 services:
   dth:
     image: alishehzad943/dth:latest
     ports:
-      - "81:80"
+      - "83:80"  
     deploy:
       replicas: 1
-    restart: always
-
+     
   train:
     image: alishehzad943/train1:latest
     ports:
-      - "82:80"
+      - "84:80" 
     deploy:
       replicas: 1
-    restart: always
+      
