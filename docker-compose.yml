@@ -10,7 +10,7 @@ services:
   train:
     image: alishehzad943/train1:latest
     ports:
-      - "87:80" 
+      - "84:80" 
     deploy:
       replicas: 1
       
