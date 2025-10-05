@@ -1,1 +1,17 @@
+pipeline {
+    agent any
 
+    stages {
+        stage('Clone Code') {
+            steps {
+                git 'https://github.com/alishehzad-943/docker-project.git'
+            }
+        }
+
+        stage('Deploy with Docker Stack') {
+            steps {
+                sh 'docker stack deploy -c docker-compose.yml paytm'
+            }
+        }
+    }
+}
