@@ -2,96 +2,53 @@ DOCKER PROJECT
 Overview
 
 Complete CI/CD pipeline using Jenkins, GitHub, Docker, and Docker Hub.
-Automates image building, pushing to Docker Hub, and container deployment.
-Uses Docker Compose, Docker Swarm, and Docker Stack for orchestration.
+
+Automates image creation, pushing to Docker Hub, and deployment on servers.
+
+Uses Docker Compose, Swarm, and Stack for multi-container and multi-server orchestration.
 
 Docker Components
 
-Dockerfile: Creates image automatically.
-Docker Compose: Runs multiple containers on a single server.
-Docker Swarm: Manages multiple servers (cluster).
-Docker Stack: Combines Swarm and Compose for deployment.
+Dockerfile: To create image automatically.
+
+Docker Compose: To create multiple containers on a single server.
+
+Docker Swarm: To create containers on multiple servers.
+
+Docker Stack: Combination of Docker Swarm and Docker Compose.
 
 Process Steps
 
-1. Create 3 servers and install Docker
-yum install docker -y
-systemctl start docker
-systemctl enable docker
-systemctl status docker
-Run docker swarm init on master and copy the token to worker nodes.
+Create 3 servers and install Docker on all.
 
-2. Install Jenkins (on Master)
-sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-amazon-linux-extras install java-openjdk11 -y
-yum install git maven jenkins -y
-systemctl start jenkins.service
+Initialize Docker Swarm on master and join worker nodes using token.
 
-Access Jenkins: http://<Master_Public_IP>:8080
+Install Jenkins on master node.
 
-3. Jenkins Pipeline (Build & Push)
+Configure Jenkins and create a new pipeline job.
 
-Clone GitHub repo.
-Build Docker image.
-Tag image.
-Push image to Docker Hub.
+Give Docker permissions on master for image building.
 
-Pipeline example:
+Write Docker Compose file for multiple services.
 
-pipeline {
-    agent any 
-    stages {
-        stage('Code') { steps { git 'https://github.com/alishehzad-943/docker-project.git' } }
-        stage('Build') { steps { sh 'docker build -t $img .' } }
-        stage('Tag') { steps { sh 'docker tag $img $repo' } }
-        stage('Push') {
-            steps {
-                sh '''
-                    echo $PASSWORD | docker login -u $USERNAME --password-stdin
-                    docker push $repo
-                '''
-            }
-        }
-    }
-}
+Deploy application through Jenkins pipeline using Docker Stack.
 
+Files Used
 
-4. Give Permissions on Master
+Dockerfile
 
-chmod 777 /var/run/docker.sock
-systemctl daemon-reload
-systemctl restart docker.service
+docker-compose.yml
 
-5. Deployment Pipeline (Docker Stack)
+Jenkinsfile (Build and Push)
 
-Clone GitHub repository.
-Deploy using Docker Stack and Compose file.
-
-Pipeline example:
-
-pipeline {
-    agent any
-    stages {
-        stage('Clone Code') {
-            steps { git 'https://github.com/alishehzad-943/docker-project.git' }
-        }
-        stage('Deploy with Docker Stack') {
-            steps { sh 'docker stack deploy -c docker-compose.yml paytm' }
-        }
-    }
-}
-
-Files Description
-
-Dockerfile: Defines Apache web server image.
-docker-compose.yml: Defines multiple container services.
-Jenkinsfile (Build): Handles build, tag, and push.
-Jenkinsfile (Deploy): Handles deployment using Docker Stack.
+Jenkinsfile (Deploy)
 
 Result
 
-Automated CI/CD pipeline end to end.
+Automated CI/CD pipeline with Jenkins and Docker.
+
 Builds, tags, and pushes Docker images automatically.
-Deploys containers across multiple servers using Swarm.
-Fully integrated workflow between Jenkins, GitHub, and Docker Hub.
+
+Deploys multiple containers on multiple servers using Docker Swarm.
+
+Complete integration between Jenkins, GitHub, and Docker Hub.
